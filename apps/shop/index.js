@@ -33,11 +33,11 @@ API.init("shop")
 
         });
 
-        var launchParameters = API.appInfo.getAppLaunchParamters();
+        var launchParameters = API.appInfo.getAppLaunchParameters();
         if (launchParameters) openShopPage(launchParameters);
     
         API.appInfo.eventHandlers.appLaunchParametersUpdate = function () {
-            openShopPage(API.appInfo.getAppLaunchParamters());
+            openShopPage(API.appInfo.getAppLaunchParameters());
         }
 
         API.appLifecycle.appContentReady("Shop");
