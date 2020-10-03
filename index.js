@@ -368,7 +368,7 @@ const system = {
             var appIframeElement = document.createElement("iframe");
             appIframeElement.classList.add("systemAppIframe");
             appIframeElement.classList.add("system" + appIDProperCase + "Iframe");
-            appIframeElement.setAttribute("src", "/apps/" + appID + "/index.html");
+            appIframeElement.setAttribute("src", "apps/" + appID + "/index.html");
 
             var appSplashScreenElement = document.createElement("div");
             appSplashScreenElement.classList.add("systemAppSplashScreen");
