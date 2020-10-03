@@ -282,7 +282,7 @@ const system = {
                         return false;
                     }
                 };
-                request.open("GET", "/apps/" + appID + "/manifest.json", true);
+                request.open("GET", "apps/" + appID + "/manifest.json", true);
                 request.send();
             });
 
