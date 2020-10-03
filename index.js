@@ -377,7 +377,7 @@ const system = {
             var appSplashScreenImage = document.createElement("img");
             appSplashScreenImage.classList.add("systemAppSplashScreenImage");
             appSplashScreenImage.classList.add("system" + appIDProperCase + "SplashScreenImage");
-            appSplashScreenImage.setAttribute("src", "/apps/" + appID + "/assets/appIcon-250px.png");
+            appSplashScreenImage.setAttribute("src", "apps/" + appID + "/assets/appIcon-250px.png");
 
             appTopBarElement.appendChild(appTopBarCloseButtonElement);
             appTopBarElement.appendChild(appTopBarTitleElement);
