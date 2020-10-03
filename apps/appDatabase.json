@@ -1,0 +1,10 @@
+{
+    "shownInShop": [
+        "testApp",
+        "testApp2"
+    ],
+    "notShownInShop": [
+        "settings",
+        "shop"
+    ]
+}

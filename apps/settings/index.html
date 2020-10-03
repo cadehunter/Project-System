@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" type="text/css" href="../../css/appDefaultStyles.css">
+
+</head>
+
+<body>
+
+    <div class="UIscreen active" id="mainScreen">
+        <button class="UIbutton" onclick="API.UIManager.openScreen('workspaceScreen')">Workspace</button><br>
+        <button class="UIbutton" onclick="API.UIManager.openScreen('appsScreen')">Apps</button>
+    </div>
+    
+    <div class="UIscreen" id="workspaceScreen">
+        
+        <button class="UIbutton" onclick="API.UIManager.closeScreen('workspaceScreen')">Back</button><br>
+        
+        <select name="workspaceBottomBarViewMode">
+            <option value="fixed">Fixed</option>
+            <option value="floating">Floating</option>
+        </select>
+        <label for="workspaceBottomBarViewMode">Bottom Bar View Mode</label><br>
+        
+        <select name="workspaceSidebarAppListViewMode">
+            <option value="list">List</option>
+            <option value="grid">Grid</option>
+        </select>
+        <label for="workspaceSidebarAppListViewMode">Sidebar App List View Mode</label>
+        
+    </div>
+
+    <div class="UIscreen" id="appsScreen">
+       
+        <button class="UIbutton" onclick="API.UIManager.closeScreen('appsScreen')">Back</button><br>
+
+        <input type="checkbox" name="showExtendedSplashScreen"><label for="showExtendedSplashScreen">Show Extended Splash Screen during App Launch</label><br>
+
+        <input type="checkbox" name="hideAppDetailsWhenNotActive"><label for="hideAppDetailsWhenNotActive">Hide App Details when Not Active</label>
+
+    </div>
+
+    <script src="../../api.js"></script>
+    <script src="index.js"></script>
+
+</body>
+
+</html>

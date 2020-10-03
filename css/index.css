@@ -1,0 +1,491 @@
+:root {
+
+    /* Variable definitions */
+    --system-background-color: #eeeeee;
+    --system-primary-color: #ffffff;
+    --system-secondary-color: #f5f5f5;
+    
+    --system-text-color: #000000;
+    --system-alternate-text-color: #555555;
+    --system-app-window-accent-color: #777777;
+    
+    --system-app-window-shadow-color: #b8b8b8;
+    --system-primary-shadow-color: #cccccc;
+    
+    --system-primary-hover-color: #eeeeee;
+    --system-background-hover-color: #dddddd;
+
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+
+        /* Dark mode variable definitions */
+        --system-background-color: #2A2A2A;
+        --system-primary-color: #000000;
+        --system-secondary-color: #333333;
+        
+        --system-text-color: #ffffff;
+        --system-alternate-text-color: #eeeeee;
+        --system-app-window-accent-color: #dddddd;
+        
+        --system-app-window-shadow-color: #202020;
+        --system-primary-shadow-color: #222222;
+        
+        --system-primary-hover-color: #151515;
+        --system-background-hover-color: #222222;
+
+    }
+}
+
+@font-face {
+    
+    font-family: Inter;
+    src: url(../Inter.ttf);
+    
+}
+
+body {
+
+    font-family: Inter, Helvetica, sans-serif;
+    color: var(--system-text-color);
+    -webkit-user-select: none;
+    user-select: none;
+
+}
+
+p {
+    
+    margin: 0;
+    
+}
+
+.systemViewport {
+
+    width: 100vw;
+    height: 100vh;
+    margin: none;
+    padding: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--system-background-color);
+
+}
+
+.fullscreen {
+
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+
+}
+
+.fullwidth {
+
+    width: 100vw;
+    margin: 0;
+
+}
+
+.hidden {
+
+    display: none;
+
+}
+
+.systemAppWindow {
+
+    background-color: white;
+    position: absolute;
+    width: 500px;
+    height: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px var(--system-app-window-shadow-color);
+    
+    opacity: 0;
+    transform: scale(0.85);
+    
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+}
+
+.systemAppContentScreen {
+
+    width: 100%;
+    height: calc(100% - 25px);
+    margin: 0;
+    padding: 0;
+    z-index: 3;
+    position: absolute;
+
+}
+
+.systemAppTopBar {
+
+    width: 100%;
+    height: 25px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--system-secondary-color);
+    cursor: default;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+
+}
+
+.systemAppTopBarTitle {
+    
+    text-align: center;
+    line-height: 25px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    opacity: 0;
+    display: inline;
+    transition: opacity 0.1s ease;
+    
+}
+
+.systemAppIframe {
+
+    width: 100%;
+    height: 100%;
+    border: none;
+
+}
+
+.systemAppSplashScreen {
+
+    position: absolute;
+    top: 25px;
+    width: 100%;
+    height: calc(100% - 25px);
+    margin: 0;
+    padding: 0;
+    opacity: 1;
+    transition: opacity 0.1s ease;
+    z-index: 4;
+    position: absolute;
+    background-color: var(--system-secondary-color);
+
+}
+
+.systemAppSplashScreenImage {
+
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+.systemAppTopBarCloseButton {
+    
+    width: 38px;
+    height: 10px;
+    border-radius: 5px;
+    
+    display: inline-block;
+    margin: 7.5px 0 0 10px;
+    cursor: pointer;
+    
+    text-align: center;
+    font-size: 12px;
+    line-height: 10px;
+    
+    /*width: 35px;
+    height: 17px;
+    line-height: 17px;
+    border-radius: 8px;*/
+    
+    background-color: var(--system-text-color);
+    color: var(--system-text-color);
+    
+    transition: all 0.2s ease;
+    
+}
+
+.systemAppTopBarCloseButton:hover, .systemAppTopBarCloseButton:focus {
+    
+    background-color: var(--system-alternate-text-color);
+    color: var(--system-primary-color);
+    line-height: 14px;
+    height: 14px;
+    transform: translateY(-2px);
+    cursor: pointer;
+    
+}
+
+.systemAppTopBarCloseButtonKeyboardShortcutIndicator {
+    
+    background-color: var(--system-app-window-accent-color);
+    color: var(--system-app-window-accent-color);
+    
+}
+
+.systemWorkspaceBottomBarSystemIcon > * {
+
+    width: 25px;
+    height: auto;
+    cursor: pointer;
+
+}
+
+.systemWorkspaceBottomBar.floating {
+
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 1;
+
+    background-color: var(--system-primary-color);
+    width: 65%;
+    height: 40px;
+    z-index: 2;
+    box-shadow: 0 0 10px var(--system-app-window-shadow-color);
+
+    border-radius: 20px;
+    
+}
+
+.systemWorkspaceBottomBar.fixed {
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+
+    background-color: var(--system-primary-color);
+    width: 100vw;
+    height: 40px;
+    z-index: 2;
+    box-shadow: 0 0 10px var(--system-app-window-shadow-color);
+    
+}
+
+.systemWorkspaceBottomBarSystemIcon {
+
+    position: absolute;
+    top: 6.5px;
+    left: 20px;
+
+}
+
+.systemWorkspaceSidebar {
+    
+    height: 100vh;
+    width: 400px;
+    background-color: var(--system-primary-color);
+    position: fixed;
+    transform: translate(-100%);
+    z-index: 3;
+
+    transition: transform 0.3s ease;
+    
+}
+
+.systemWorkspaceSidebar.open {
+    
+    transform: none;
+    
+}
+
+.systemWorkspaceSidebarOverlay {
+    
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+    
+    transition: opacity 0.3s ease;
+    
+}
+
+.systemWorkspaceSidebarOverlay.active {
+    
+    display: block;
+    
+}
+
+.systemWorkspaceSidebar .closeButton {
+    
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    font-size: 40px;
+    line-height: 26px;
+    cursor: pointer;
+    
+}
+
+.systemWorkspaceSidebar .title {
+    
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    font-size: 25px;
+    margin: 0;
+    
+}
+
+.systemWorkspaceSidebarAppList {
+    
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 75px);
+    
+}
+
+.systemWorkspaceSidebarAppList.list .appCard {
+    
+    background-color: var(--system-background-color);
+    width: 182px;
+    height: 50px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 5px var(--system-primary-shadow-color);
+    
+    transition: background-color 0.1s ease;
+    
+}
+
+.systemWorkspaceSidebarAppList.list .appCard img {
+    
+    margin: 5px;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    
+}
+
+.systemWorkspaceSidebarAppList.list .appCard p {
+    
+    display: inline-block;
+    margin: 0;
+    font-size: 15px;
+    position: relative;
+    bottom: 19px;
+    
+}
+
+.systemWorkspaceSidebarAppList.grid .appCard {
+    
+    background-color: var(--system-background-color);
+    width: 84px;
+    height: 90px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 5px var(--system-primary-shadow-color);
+    
+    transition: background-color 0.1s ease;
+    
+}
+
+.systemWorkspaceSidebarAppList.grid .appCard img {
+    
+    margin: 10px 17px 0 17px;
+    border-radius: 5px;
+    width: 50px;
+    height: 50px;
+    
+}
+
+.systemWorkspaceSidebarAppList.grid .appCard p {
+    
+    margin: 0;
+    padding: 2px;
+    text-align: center;
+    font-size: 15px;
+    
+}
+
+.systemWorkspaceSidebarAppList .appCard:hover {
+    
+    background-color: var(--system-background-hover-color);
+    
+}
+
+@keyframes systemContextMenu {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    50% {
+        transform: none;
+    }
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.systemContextMenu {
+    
+    position: fixed;
+    width: 175px;
+    background-color: var(--system-primary-color);
+    border-radius: 5px;
+    box-shadow: 0 0 5px var(--system-primary-shadow-color);
+    cursor: pointer;
+    overflow: hidden;
+    opacity: 1;
+    
+    animation: systemContextMenu 0.3s ease;
+    transition: opacity 0.1s ease;
+    
+}
+
+@keyframes systemContextMenuItem {
+    0% {
+        opacity: 0;
+        transform: translate(10px, 0);
+    }
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.systemContextMenu .menuItem {
+    
+    padding: 5px;
+    border-bottom: 1px solid var(--system-alternate-text-color);
+    
+    animation: systemContextMenuItem 0.4s ease;
+    transition: background-color 0.1s ease;
+    
+}
+
+.systemContextMenu .menuItem:hover {
+    
+    background-color: var(--system-primary-hover-color);
+    
+}
+
+.systemContextMenu .menuItem:last-child {
+    
+    border-bottom: none;
+    
+}

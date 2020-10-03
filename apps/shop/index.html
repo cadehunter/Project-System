@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" type="text/css" href="../../css/appDefaultStyles.css">
+
+</head>
+
+<body>
+
+    <div class="UIscreen active" id="mainScreen">
+
+        <h1>Welcome to the Shop</h1>
+
+        <div id="appList"></div>
+
+    </div>
+
+    <div class="UIscreen" id="appPreviewScreen">
+
+        <button class="UIbutton" onclick="API.UIManager.closeScreen('appPreviewScreen')">Back</button><br>
+
+        <div>
+            <img>
+            <h2></h2>
+            <button id="getAppButton" class="UIbutton"></button>
+        </div>
+
+    </div>
+
+    <script src="../../api.js"></script>
+    <script src="index.js"></script>
+
+</body>
+
+</html>

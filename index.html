@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+    <title>Project System</title>
+
+    <link rel="stylesheet" href="css/index.css">
+
+</head>
+
+<body>
+
+    <div class="systemViewport">
+
+        <div class="systemLoadingContainer fullscreen">
+
+
+
+        </div>
+
+        <div class="systemSetupContainer fullscreen hidden">
+
+
+
+        </div>
+
+        <div class="systemWorkspaceContainer fullscreen hidden">
+
+            <div class="systemWorkspaceBottomBar" data-contextmenu="changeBottomBarViewMode">
+
+                <picture class="systemWorkspaceBottomBarSystemIcon" onclick="system.workspaceManager.toggleWorkspaceSidebar()">
+                    <source srcset="images/systemIconWhite.svg" media="(prefers-color-scheme: dark)">
+                    <img src="images/systemIconBlack.svg">
+                </picture>
+
+                <button onclick="system.appManager.openApp('testApp')">Open testApp</button>
+                <button onclick="system.appManager.openApp('testApp2')">Open testApp2</button>
+                <button onclick="system.appManager.openApp('settings')">Open Settings</button>
+
+            </div>
+
+            <div class="systemWorkspaceSidebar">
+
+                <h1 class="title" data-contextmenu="changeAppListViewMode">Welcome to System!</h1>
+
+                <p class="closeButton" onclick="system.workspaceManager.toggleWorkspaceSidebar('closed')">&times;</p>
+
+                <div class="systemWorkspaceSidebarAppList"></div>
+
+            </div>
+
+            <div class="systemWorkspaceSidebarOverlay" onclick="system.workspaceManager.toggleWorkspaceSidebar('closed')"></div>
+
+        </div>
+
+    </div>
+
+    <script src="index.js"></script>
+
+</body>
+
+</html>
