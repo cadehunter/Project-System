@@ -29,7 +29,7 @@ const API = {
             appLaunchParametersUpdate: undefined,
         },
         appLaunchParameters: undefined,
-        getAppLaunchParamters: function () {
+        getAppLaunchParamaters: function () {
             return API.appInfo.appLaunchParameters;
         }
     },
