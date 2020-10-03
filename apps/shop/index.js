@@ -17,7 +17,7 @@ API.init("shop")
                     });
 
                     var icon = document.createElement("img");
-                    icon.src = "../" + manifest.appID + "/assets/appicon-50px.png";
+                    icon.src = "../" + manifest.appID + "/assets/appIcon-50px.png";
 
                     var label = document.createElement("p");
                     label.textContent = manifest.appName;
