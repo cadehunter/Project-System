@@ -8,7 +8,8 @@ const system = {
         workspaceBottomBar: document.querySelector(".systemWorkspaceBottomBar"),
         workspaceSidebar: document.querySelector(".systemWorkspaceSidebar"),
         workspaceSidebarOverlay: document.querySelector(".systemWorkspaceSidebarOverlay"),
-        workspaceSidebarAppList: document.querySelector(".systemWorkspaceSidebarAppList")
+        workspaceSidebarAppList: document.querySelector(".systemWorkspaceSidebarAppList"),
+        workspaceBottomBarPinnedAppsArea: document.querySelector(".systemWorkspaceBottomBarPinnedAppsArea"),
 
     },
     internalFunctions: {
@@ -236,6 +237,35 @@ const system = {
 
                 return itemObject;
             },
+            pinAppToBottomBar: function (appID) {
+                
+                var itemObject = {};
+                
+                if (system.workspaceManager.workspaceBottomBar.contains(appID)) {
+                    itemObject.name = "Unpin";
+                    itemObject.action = function () {
+                        system.workspaceManager.workspaceBottomBar.removeApp(appID);
+                    };
+                } else {
+                    itemObject.name = "Pin to Bottom Bar";
+                    itemObject.action = function () {
+                        system.workspaceManager.workspaceBottomBar.addApp(appID);
+                    };
+                }
+                
+                return itemObject;
+                
+            },
+            unpinAppFromBottomBar: function (appID) {
+                
+                return {
+                    name: "Unpin",
+                    action: function () {
+                        system.workspaceManager.workspaceBottomBar.removeApp(appID);
+                    }
+                };
+                
+            }
 
         }
 
@@ -779,9 +809,9 @@ const system = {
                     appCard.classList.add("appCard");
 
                     if (manifest.showInShop) {
-                        appCard.setAttribute("data-contextmenu", "appListShowAppInShop:" + currentAppID + ";copyAppName:" + currentAppName + ";removeApp:" + currentAppID);
+                        appCard.setAttribute("data-contextmenu", "pinAppToBottomBar:" + currentAppID + ";appListShowAppInShop:" + currentAppID + ";copyAppName:" + currentAppName + ";removeApp:" + currentAppID);
                     } else {
-                        appCard.setAttribute("data-contextmenu", "copyAppName:" + currentAppName + ";removeApp:" + currentAppID);
+                        appCard.setAttribute("data-contextmenu", "pinAppToBottomBar:" + currentAppID + ";copyAppName:" + currentAppName + ";removeApp:" + currentAppID);
                     }
 
                     // Using IIFE here to prevent currentAppID from being passed with a closure, and thus always referring to the last app.
@@ -810,6 +840,66 @@ const system = {
 
             }
 
+        },
+        
+        workspaceBottomBar: {
+            
+            contains: function(appID) {
+                
+                if (system.storage.apps.installedApps.indexOf(appID) != -1) {
+                    return false;
+                } else {
+                    return true;
+                }
+                
+            },
+            addApp: function (appID) {
+                
+                system.storage.apps.workspaceBottomBarPinnedApps.push(appID);
+                system.storageManager.manualSave();
+                system.workspaceManager.workspaceBottomBar.refreshPinnedApps();
+                
+            },
+            removeApp: function (appID) {
+                
+                system.storage.apps.workspaceBottomBarPinnedApps.splice(system.storage.apps.workspaceBottomBarPinnedApps.indexOf(appID), 1);
+                system.storageManager.manualSave();
+                system.workspaceManager.workspaceBottomBar.refreshPinnedApps();
+                
+            },
+            
+            refreshPinnedApps: function () {
+                
+                var pinnedAppsArea = system.DOMReferences.workspaceBottomBarPinnedAppsArea;
+                
+                // Remove all children from the element
+                while (pinnedAppsArea.firstChild) {
+                    pinnedAppsArea.removeChild(pinnedAppsArea.firstChild);
+                }
+                
+                // Repopulate with the apps in storage
+                var pinnedApps = system.storage.apps.workspaceBottomBarPinnedApps;
+                for (var i = 0; i < pinnedApps.length; i++) {
+                    
+                    var currentAppID = pinnedApps[i];
+                    
+                    var icon = document.createElement("img");
+                    icon.src = "apps/" + currentAppID + "/assets/appIcon-50px.png";
+                    // Embedding in IIFE so that currentAppID isn't passed by Closure
+                    (function (currentAppID) {
+                        icon.addEventListener("click", function () {
+                            system.appManager.openApp(currentAppID);
+                        });
+                    })(currentAppID)
+                    icon.setAttribute("data-contextmenu", "unpinAppFromBottomBar:" + currentAppID);
+                    
+                    pinnedAppsArea.appendChild(icon);
+
+                }
+                
+                
+            }
+            
         },
 
         changeWorkspaceSidebarAppListViewMode: function (viewMode) {
@@ -1050,7 +1140,8 @@ if (localStorage.getItem("storage")) {
 
         apps: {
 
-            installedApps: ["shop", "settings", "testApp", "testApp2"]
+            installedApps: ["shop", "settings", "testApp", "testApp2"],
+            workspaceBottomBarPinnedApps: [],
 
         }
 
@@ -1066,8 +1157,11 @@ window.onload = function () {
     // Set Workspace bottom bar view mode
     system.DOMReferences.workspaceBottomBar.classList.add(system.storage.settings.workspaceBottomBarViewMode);
 
-    // Add app list to Workspace Sidebar
+    // Populate app list in Workspace Sidebar
     system.workspaceManager.reloadWorkspaceSidebarAppList();
+    
+    // Populate pinned apps in Workspace bottom bar
+    system.workspaceManager.workspaceBottomBar.refreshPinnedApps();
 
     // Hide loading screen and show the Workspace
     system.DOMReferences.loadingContainer.classList.add("hidden");
