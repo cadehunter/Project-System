@@ -79,6 +79,7 @@ h1 {
     border-radius: 7px;
     border: 0.5px solid var(--app-alternate-text-color);
     cursor: pointer;
+    color: var(--app-text-color);
     
     transition: background-color 0.2s ease;
     
@@ -87,6 +88,5 @@ h1 {
 .UIbutton:hover {
     
     background-color: var(--app-primary-color);
-    color: initial;
     
 }
