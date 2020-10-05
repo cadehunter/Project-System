@@ -505,5 +505,6 @@ p {
     margin-top: 2.5px;
     margin-right: 10px;
     border-radius: 2px;
+    cursor: pointer;
     
 }

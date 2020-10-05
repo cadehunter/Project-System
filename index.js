@@ -245,11 +245,21 @@ const system = {
                     itemObject.name = "Unpin";
                     itemObject.action = function () {
                         system.workspaceManager.workspaceBottomBar.removeApp(appID);
+                        
+                        // Close the Workspace sidebar if the user is not holding down the Option key
+                        if (!system.keyboardManager.currentlyPressedKeys["AltLeft"] && !system.keyboardManager.currentlyPressedKeys["AltRight"]) {
+                            system.workspaceManager.toggleWorkspaceSidebar("closed");
+                        }
                     };
                 } else {
                     itemObject.name = "Pin to Bottom Bar";
                     itemObject.action = function () {
                         system.workspaceManager.workspaceBottomBar.addApp(appID);
+                        
+                        // Close the Workspace sidebar if the user is not holding down the Option key
+                        if (!system.keyboardManager.currentlyPressedKeys["AltLeft"] && !system.keyboardManager.currentlyPressedKeys["AltRight"]) {
+                            system.workspaceManager.toggleWorkspaceSidebar("closed");
+                        }
                     };
                 }
                 
@@ -846,10 +856,10 @@ const system = {
             
             contains: function(appID) {
                 
-                if (system.storage.apps.installedApps.indexOf(appID) != -1) {
-                    return false;
-                } else {
+                if (system.storage.apps.workspaceBottomBarPinnedApps.indexOf(appID) != -1) {
                     return true;
+                } else {
+                    return false;
                 }
                 
             },
