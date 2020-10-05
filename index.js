@@ -238,14 +238,14 @@ const system = {
                 return itemObject;
             },
             pinAppToBottomBar: function (appID) {
-                
+
                 var itemObject = {};
-                
+
                 if (system.workspaceManager.workspaceBottomBar.contains(appID)) {
                     itemObject.name = "Unpin";
                     itemObject.action = function () {
                         system.workspaceManager.workspaceBottomBar.removeApp(appID);
-                        
+
                         // Close the Workspace sidebar if the user is not holding down the Option key
                         if (!system.keyboardManager.currentlyPressedKeys["AltLeft"] && !system.keyboardManager.currentlyPressedKeys["AltRight"]) {
                             system.workspaceManager.toggleWorkspaceSidebar("closed");
@@ -255,26 +255,26 @@ const system = {
                     itemObject.name = "Pin to Bottom Bar";
                     itemObject.action = function () {
                         system.workspaceManager.workspaceBottomBar.addApp(appID);
-                        
+
                         // Close the Workspace sidebar if the user is not holding down the Option key
                         if (!system.keyboardManager.currentlyPressedKeys["AltLeft"] && !system.keyboardManager.currentlyPressedKeys["AltRight"]) {
                             system.workspaceManager.toggleWorkspaceSidebar("closed");
                         }
                     };
                 }
-                
+
                 return itemObject;
-                
+
             },
             unpinAppFromBottomBar: function (appID) {
-                
+
                 return {
                     name: "Unpin",
                     action: function () {
                         system.workspaceManager.workspaceBottomBar.removeApp(appID);
                     }
                 };
-                
+
             }
 
         }
@@ -291,6 +291,7 @@ const system = {
         addApp: function (appID) {
 
             system.storage.apps.installedApps.push(appID);
+            system.storage.apps.installedApps.sort();
             system.storageManager.manualSave();
             system.workspaceManager.reloadWorkspaceSidebarAppList();
 
@@ -339,7 +340,7 @@ const system = {
                         type: "systemAppStatusEvent",
                         appID: appID,
                         header: "appLaunchParametersUpdate",
-                        content: system.appManager.openAppLaunchParameters?.[appID]
+                        content: system.appManager.openAppLaunchParameters?. [appID]
                     }
                 });
             } else {
@@ -348,7 +349,7 @@ const system = {
                         type: "systemAppStatusEvent",
                         appID: appID,
                         header: "appLaunchParameters",
-                        content: system.appManager.openAppLaunchParameters?.[appID]
+                        content: system.appManager.openAppLaunchParameters?. [appID]
                     }
                 });
             }
@@ -821,7 +822,7 @@ const system = {
                     if (manifest.showInShop) {
                         appCard.setAttribute("data-contextmenu", "pinAppToBottomBar:" + currentAppID + ";appListShowAppInShop:" + currentAppID + ";copyAppName:" + currentAppName + ";removeApp:" + currentAppID);
                     } else {
-                        appCard.setAttribute("data-contextmenu", "pinAppToBottomBar:" + currentAppID + ";copyAppName:" + currentAppName + ";removeApp:" + currentAppID);
+                        appCard.setAttribute("data-contextmenu", "pinAppToBottomBar:" + currentAppID + ";copyAppName:" + currentAppName);
                     }
 
                     // Using IIFE here to prevent currentAppID from being passed with a closure, and thus always referring to the last app.
@@ -851,48 +852,48 @@ const system = {
             }
 
         },
-        
+
         workspaceBottomBar: {
-            
-            contains: function(appID) {
-                
+
+            contains: function (appID) {
+
                 if (system.storage.apps.workspaceBottomBarPinnedApps.indexOf(appID) != -1) {
                     return true;
                 } else {
                     return false;
                 }
-                
+
             },
             addApp: function (appID) {
-                
+
                 system.storage.apps.workspaceBottomBarPinnedApps.push(appID);
                 system.storageManager.manualSave();
                 system.workspaceManager.workspaceBottomBar.refreshPinnedApps();
-                
+
             },
             removeApp: function (appID) {
-                
+
                 system.storage.apps.workspaceBottomBarPinnedApps.splice(system.storage.apps.workspaceBottomBarPinnedApps.indexOf(appID), 1);
                 system.storageManager.manualSave();
                 system.workspaceManager.workspaceBottomBar.refreshPinnedApps();
-                
+
             },
-            
+
             refreshPinnedApps: function () {
-                
+
                 var pinnedAppsArea = system.DOMReferences.workspaceBottomBarPinnedAppsArea;
-                
+
                 // Remove all children from the element
                 while (pinnedAppsArea.firstChild) {
                     pinnedAppsArea.removeChild(pinnedAppsArea.firstChild);
                 }
-                
+
                 // Repopulate with the apps in storage
                 var pinnedApps = system.storage.apps.workspaceBottomBarPinnedApps;
                 for (var i = 0; i < pinnedApps.length; i++) {
-                    
+
                     var currentAppID = pinnedApps[i];
-                    
+
                     var icon = document.createElement("img");
                     icon.src = "apps/" + currentAppID + "/assets/appIcon-50px.png";
                     // Embedding in IIFE so that currentAppID isn't passed by Closure
@@ -902,14 +903,14 @@ const system = {
                         });
                     })(currentAppID)
                     icon.setAttribute("data-contextmenu", "unpinAppFromBottomBar:" + currentAppID);
-                    
+
                     pinnedAppsArea.appendChild(icon);
 
                 }
-                
-                
+
+
             }
-            
+
         },
 
         changeWorkspaceSidebarAppListViewMode: function (viewMode) {
@@ -1169,7 +1170,7 @@ window.onload = function () {
 
     // Populate app list in Workspace Sidebar
     system.workspaceManager.reloadWorkspaceSidebarAppList();
-    
+
     // Populate pinned apps in Workspace bottom bar
     system.workspaceManager.workspaceBottomBar.refreshPinnedApps();
 
