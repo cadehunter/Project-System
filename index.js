@@ -53,7 +53,7 @@ const system = {
         contextMenuShown: false,
         generateContextMenu: function (e) {
 
-            // Prevent the default Operating System context menu from appearing
+            // Prevent the default operating system context menu from appearing
             e.preventDefault();
 
             // If the previous context menu hasn't been removed yet, remove it.
@@ -111,7 +111,7 @@ const system = {
                  ** The contextMenuItems Object contains every context menu
                  ** item used in System. For each item the clicked element
                  ** requested, call the corresponding function in contextMenuItems
-                 ** and see if it returned and item. If it did, show the item. If
+                 ** and see if it returned an item. If it did, show the item. If
                  ** not, the item is not supposed to be shown at this time.
                  */
 
@@ -143,12 +143,73 @@ const system = {
             document.body.removeEventListener("click", system.contextMenuManager.clearContextMenu, true);
 
             var contextMenuElement = document.querySelector(".systemContextMenu");
+            
+            // If the menu has already been cleared, exit the function
+            if (!contextMenuElement) {
+                system.contextMenuManager.contextMenuShown = false;
+                return false;
+            }
+            
             contextMenuElement.style.opacity = 0;
             setTimeout(function () {
                 contextMenuElement.parentElement.removeChild(contextMenuElement);
             }, 100);
 
             system.contextMenuManager.contextMenuShown = false;
+
+        },
+
+        generateAppContextMenu: function (receivedObject, appID) {
+
+            // Generate the context menu UI
+            var contextMenu = document.createElement("div");
+            contextMenu.classList.add("systemContextMenu");
+            
+            // Get the x and y values of the app iframe
+            var rectangle = document.querySelector(".system" + system.appManager.getProperCaseAppID(appID) + "Iframe").getBoundingClientRect();
+            var iframeX = rectangle.x;
+            var iframeY = rectangle.y;
+            
+            var addedX = iframeX + receivedObject.x;
+            var addedY = iframeY + receivedObject.y;
+            
+            contextMenu.style.left = addedX + "px";
+            contextMenu.style.top = addedY + "px";
+
+            // If the mouse is close to the right edge of the screen, show the context menu to the left of the cursor
+            if (window.innerWidth - addedX < 175) {
+                contextMenu.style.transform = "translate(-100%, 0)";
+            }
+
+            for (var i = 0; i < receivedObject.items.length; i++) {
+                var itemElement = document.createElement("div");
+                itemElement.classList.add("menuItem");
+                // Embedding in IIFE to prevent it from being passed by reference in a Closure
+                (function (i) {
+                    itemElement.addEventListener("click", function () {
+
+                        var event = new CustomEvent("systemAppContextMenuEvent", {
+                            detail: {
+                                type: "systemAppContextMenuEvent",
+                                appID: appID,
+                                header: "appContextMenuAction",
+                                content: receivedObject.items[i].id,
+                            }
+                        });
+                        
+                        document.querySelector(".system" + system.appManager.getProperCaseAppID(appID) + "Iframe").contentDocument.dispatchEvent(event);
+                    });
+                })(i)
+                itemElement.textContent = receivedObject.items[i].name;
+
+                contextMenu.appendChild(itemElement);
+            }
+
+            system.contextMenuManager.contextMenuShown = true;
+            document.body.appendChild(contextMenu);
+
+            // Add event listener to clear the context menu
+            document.body.addEventListener("click", system.contextMenuManager.clearContextMenu, true);
 
         },
 
@@ -573,6 +634,21 @@ const system = {
                             break;
                         case "appStorageWrite":
 
+                            break;
+
+                    }
+
+                    break;
+
+                case "systemAppContextMenuEvent":
+
+                    switch (e.detail.header) {
+
+                        case "open":
+                            system.contextMenuManager.generateAppContextMenu(e.detail.content, e.detail.appID);
+                            break;
+                        case "close":
+                            system.contextMenuManager.clearContextMenu();
                             break;
 
                     }
@@ -1110,6 +1186,9 @@ window.document.addEventListener("systemAppStorageEvent", function (e) {
     system.appManager.appEventHandler(e)
 }, false);
 window.document.addEventListener("systemAppConsoleEvent", function (e) {
+    system.appManager.appEventHandler(e)
+}, false);
+window.document.addEventListener("systemAppContextMenuEvent", function (e) {
     system.appManager.appEventHandler(e)
 }, false);
 window.document.addEventListener("systemAppKeyboardEvent", function (e) {

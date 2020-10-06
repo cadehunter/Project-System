@@ -34,7 +34,9 @@ body {
     font-family: Inter, Helvetica, sans-serif;
     background: var(--app-primary-color);
     color: var(--app-text-color);
-
+    -webkit-user-select: none;
+    user-select: none;
+    
 }
 
 h1 {

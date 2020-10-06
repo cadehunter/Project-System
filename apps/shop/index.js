@@ -35,7 +35,7 @@ API.init("shop")
 
         var launchParameters = API.appInfo.getAppLaunchParameters();
         if (launchParameters) openShopPage(launchParameters);
-    
+
         API.appInfo.eventHandlers.appLaunchParametersUpdate = function () {
             openShopPage(API.appInfo.getAppLaunchParameters());
         }
