@@ -438,8 +438,6 @@ const system = {
             var appWindow = document.createElement("div");
             appWindow.classList.add("systemAppWindow");
             appWindow.classList.add("system" + appIDProperCase + "Window");
-            appWindow.style.top = (window.innerHeight / 2 - 150 + "px");
-            appWindow.style.left = (window.innerWidth / 2 - 250 + "px");
             appWindow.addEventListener("mousedown", function () {
 
                 system.appManager.activeApp = appID;
@@ -447,6 +445,22 @@ const system = {
                 system.appManager.moveAppWindowToTop(appID);
 
             });
+            
+            // If another window is already in that position, offset this one a bit
+            var appWindowElements = document.querySelectorAll(".systemAppWindow");
+            var numberOfOffsets = 0;
+            for (var i = 0; i < appWindowElements.length; i++) {
+                
+                if (
+                    appWindowElements[i].style.top === (window.innerHeight / 2 - 150 + (15 * numberOfOffsets) + "px") &&
+                    appWindowElements[i].style.left === (window.innerWidth / 2 - 250 + (15 * numberOfOffsets) + "px")
+                ) {
+                    numberOfOffsets++;
+                }
+                
+            }
+            appWindow.style.top = (window.innerHeight / 2 - 150 + (15 * numberOfOffsets) + "px");
+            appWindow.style.left = (window.innerWidth / 2 - 250 + (15 * numberOfOffsets) + "px");
 
             var appTopBarElement = document.createElement("div");
             appTopBarElement.classList.add("systemAppTopBar");
