@@ -27,6 +27,12 @@ const API = {
             },
             appSettingsReceiver: undefined,
             appLaunchParametersUpdate: undefined,
+            
+            internal: {
+                
+                appStorageReadReceiver: undefined
+                
+            }
         },
         appLaunchParameters: undefined,
         getAppLaunchParameters: function () {
@@ -207,6 +213,34 @@ const API = {
         }
 
     },
+    
+    storageManager: {
+        
+        read: function (storagePath) {
+            
+            return new Promise(function (resolve, reject) {
+                
+                API.appInfo.eventHandlers.internal.appStorageReadReceiver = function (e) {
+                    if (e.detail.content) {
+                        resolve(e.detail.content);
+                    } else {
+                        reject(e.detail.content);
+                    }
+                }
+                
+                API.eventManager.sendEvent("systemAppStorageEvent", "appStorageRead", storagePath);
+                
+            });
+            
+        },
+        
+        write: function (storagePath, value) {
+            
+            API.eventManager.sendEvent("systemAppStorageEvent", "appStorageWrite", [storagePath, value]);
+            
+        },
+        
+    },
 
     eventManager: {
 
@@ -336,6 +370,19 @@ window.document.addEventListener("systemSettingsEvent", function (e) {
     }
 
 }, false);
+
+window.document.addEventListener("systemAppStorageEvent", function (e) {
+
+    switch (e.detail.header) {
+
+        case "readStorage":
+            API.appInfo.eventHandlers.internal.appStorageReadReceiver(e);
+            break;
+
+    }
+
+}, false);
+
 
 window.document.addEventListener("systemShopEvent", function (e) {
 

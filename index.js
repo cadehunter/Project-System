@@ -143,13 +143,13 @@ const system = {
             document.body.removeEventListener("click", system.contextMenuManager.clearContextMenu, true);
 
             var contextMenuElement = document.querySelector(".systemContextMenu");
-            
+
             // If the menu has already been cleared, exit the function
             if (!contextMenuElement) {
                 system.contextMenuManager.contextMenuShown = false;
                 return false;
             }
-            
+
             contextMenuElement.style.opacity = 0;
             setTimeout(function () {
                 contextMenuElement.parentElement.removeChild(contextMenuElement);
@@ -164,15 +164,15 @@ const system = {
             // Generate the context menu UI
             var contextMenu = document.createElement("div");
             contextMenu.classList.add("systemContextMenu");
-            
+
             // Get the x and y values of the app iframe
             var rectangle = document.querySelector(".system" + system.appManager.getProperCaseAppID(appID) + "Iframe").getBoundingClientRect();
             var iframeX = rectangle.x;
             var iframeY = rectangle.y;
-            
+
             var addedX = iframeX + receivedObject.x;
             var addedY = iframeY + receivedObject.y;
-            
+
             contextMenu.style.left = addedX + "px";
             contextMenu.style.top = addedY + "px";
 
@@ -196,7 +196,7 @@ const system = {
                                 content: receivedObject.items[i].id,
                             }
                         });
-                        
+
                         document.querySelector(".system" + system.appManager.getProperCaseAppID(appID) + "Iframe").contentDocument.dispatchEvent(event);
                     });
                 })(i)
@@ -630,10 +630,27 @@ const system = {
                     switch (e.detail.header) {
 
                         case "appStorageRead":
+                            var retreivedStorageItem = system.storageManager.appStorage.read(
+                                e.detail.appID,
+                                e.detail.content
+                            );
+                            var event = new CustomEvent("systemAppStorageEvent", {
+                                detail: {
+                                    type: "systemAppStorageEvent",
+                                    appID: e.detail.appID,
+                                    header: "readStorage",
+                                    content: retreivedStorageItem
+                                }
+                            });
+                            document.querySelector(".system" + system.appManager.getProperCaseAppID(e.detail.appID) + "Iframe").contentDocument.dispatchEvent(event);
 
                             break;
                         case "appStorageWrite":
-
+                            system.storageManager.appStorage.write(
+                                e.detail.appID,
+                                e.detail.content[0],
+                                e.detail.content[1]
+                            );
                             break;
 
                     }
@@ -1170,6 +1187,100 @@ const system = {
 
             localStorage.setItem("storage", JSON.stringify(system.storage));
 
+        },
+
+        appStorage: {
+
+            read: function (appID, storagePath) {
+                
+                var storagePathType = typeof storagePath;
+
+                if (storagePathType === "string" || Array.isArray(storagePath)) {
+
+                    // If the storagePath is a String, split it
+                    if (storagePathType === "string") {
+                        storagePath = storagePath.split(".");
+                    }
+                    
+                    // Go through each item of the Array, adding to the path
+                    var currentItem = system.appStorage[appID];
+                    for (var i = 0; i < storagePath.length; i++) {
+
+                        currentItem = currentItem[storagePath[i]];
+
+                    }
+                    return currentItem;
+
+                } else if (storagePathType === "undefined") {
+                    
+                    // The app didn't pass a storagePath argument, so return the app's entire storage object
+                    return system.appStorage[appID];
+                    
+                } else {
+                    
+                    return false;
+                    
+                }
+
+            },
+
+            write: function (appID, storagePath, value) {
+                
+                var storagePathType = typeof storagePath;
+
+                if (storagePathType === "string" || Array.isArray(storagePath)) {
+
+                    // If the storagePath is a String, split it and use the Array
+                    if (storagePathType === "string") {
+                        storagePath = storagePath.split(".");
+                    }
+
+                    // If the app hasn't stored anything before, initialize it with an empty object
+                    if (!system.appStorage[appID]) {
+                        system.appStorage[appID] = {};
+                    }
+                    
+                    var currentObject = system.appStorage[appID]
+
+                    for (var i = 0; i < storagePath.length - 1; i++) {
+
+                        var item = storagePath[i];
+
+                        newNode = currentObject[item];
+
+                        if (newNode) {
+
+                            currentObject = newNode;
+
+                        } else {
+
+                            currentObject = currentObject[item] = {};
+
+                        }
+
+                    }
+
+                    currentObject[storagePath[storagePath.length - 1]] = value;
+
+                } else if (storagePathType === "undefined") {
+                    
+                    // The app didn't pass a storagePath argument, so write to the app's entire storage object
+                    system.appStorage[appID] = value;
+                    
+                } else {
+                    
+                    return false;
+                    
+                }
+
+                system.storageManager.appStorage.manualSave();
+
+            },
+
+            manualSave: function () {
+                localStorage.setItem("appStorage", JSON.stringify(system.appStorage));
+            }
+
         }
 
     },
@@ -1237,6 +1348,14 @@ if (localStorage.getItem("storage")) {
 
     }
     localStorage.setItem("storage", JSON.stringify(system.storage));
+}
+
+if (localStorage.getItem("appStorage")) {
+    // Recall app storage if it exists
+    system.appStorage = JSON.parse(localStorage.getItem("appStorage"));
+} else {
+    // Otherwise store default
+    localStorage.setItem("appStorage", JSON.stringify(system.appStorage));
 }
 
 window.onload = function () {

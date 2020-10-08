@@ -3,8 +3,24 @@ API.init("testApp")
     
         API.appLifecycle.appContentReady("testApp");
     
-    })
+    });
 
-/*API.appInfo.eventHandlers.appPrepareToCloseHandler = function () {
-    API.appLifecycle.appReadyToClose();
-}*/
+function store() {
+    
+    API.storageManager.write("a.b.c", "xyz");
+    API.storageManager.write("x.y.z", "abc");
+    
+}
+
+function recall() {
+    
+    API.storageManager.read(undefined).then(
+        (content) => {
+            console.log(content);
+        },
+        (content) => {
+            console.log("Error: " + content);
+        }
+    );
+    
+}
