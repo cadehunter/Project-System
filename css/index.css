@@ -355,7 +355,7 @@ p {
 .systemWorkspaceSidebarAppList.list .appCard {
     
     background-color: var(--system-background-color);
-    width: 182px;
+    width: calc(50% - 15px);
     height: 50px;
     margin-left: 10px;
     margin-bottom: 10px;
@@ -363,6 +363,9 @@ p {
     border-radius: 10px;
     cursor: pointer;
     box-shadow: 0 0 5px var(--system-primary-shadow-color);
+    
+    /*Fix for inline-block ghost spacing*/
+    font-size: 0;
     
     transition: background-color 0.1s ease;
     
@@ -390,7 +393,7 @@ p {
 .systemWorkspaceSidebarAppList.grid .appCard {
     
     background-color: var(--system-background-color);
-    width: 84px;
+    width: calc(25% - 12.5px);
     height: 90px;
     margin-left: 10px;
     margin-bottom: 10px;
