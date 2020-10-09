@@ -376,16 +376,21 @@ const system = {
         getAppManifest: function (appID) {
 
             return new Promise(function (resolve, reject) {
-                var request = new XMLHttpRequest();
-                request.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        resolve(JSON.parse(this.responseText));
-                    } else {
-                        return false;
+                
+                fetch("apps/" + appID + "/manifest.json").then(function(response) {
+                    
+                    if(response.ok) {
+                        
+                        return response.json();
+                        
+                    }else {
+                        
+                        reject("Error performing fetch request");
+                        
                     }
-                };
-                request.open("GET", "apps/" + appID + "/manifest.json", true);
-                request.send();
+                    
+                }).then((data) => resolve(data));
+                
             });
 
         },

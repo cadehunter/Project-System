@@ -53,16 +53,19 @@ var appPreviewScreen = {
 function getAppDatabase() {
 
     return new Promise(function (resolve, reject) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                resolve(JSON.parse(this.responseText));
-            } else {
-                return false;
+        fetch("../appDatabase.json").then(function(response) {
+            
+            if(response.ok) {
+                
+                return response.json();
+
+            }else {
+
+                reject("Error performing fetch request");
+
             }
-        };
-        request.open("GET", "../appDatabase.json", true);
-        request.send();
+                    
+        }).then((data) => resolve(data));
     });
 
 }
@@ -70,16 +73,19 @@ function getAppDatabase() {
 function getAppManifest(appID) {
 
     return new Promise(function (resolve, reject) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                resolve(JSON.parse(this.responseText));
-            } else {
-                return false;
+        fetch("../" + appID + "/manifest.json").then(function(response) {
+                    
+            if(response.ok) {
+
+                return response.json();
+
+            }else {
+
+                reject("Error performing fetch request");
+
             }
-        };
-        request.open("GET", "../" + appID + "/manifest.json", true);
-        request.send();
+
+        }).then((data) => resolve(data));
     });
 
 }
